@@ -36,7 +36,7 @@ var fallSound;
 var contactWithEnemy;
 var goal;
 
-let platforms;
+var platforms;
 
 // ---------------------
 // preload sound effect
@@ -189,7 +189,7 @@ function draw() {
 	if (gameChar_y < floorPos_y) {
 
 		var isContact = false;
-		for (let i = 0; i < platforms.length; i++) {
+		for (var i = 0; i < platforms.length; i++) {
 			if (checkContact(gameChar_world_x, gameChar_y, platforms[i])) {
 			  isContact = true;
 			  isFalling = false;
