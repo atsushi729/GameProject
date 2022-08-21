@@ -190,10 +190,11 @@ function draw() {
 
 		var isContact = false;
 		for (let i = 0; i < platforms.length; i++) {
-		  if (checkContact(gameChar_world_x, gameChar_y, platforms[i])) {
-			isContact = true;
-			gameChar_y = platforms[i].pos_y;
-			break;
+			if (checkContact(gameChar_world_x, gameChar_y, platforms[i])) {
+			  isContact = true;
+			  isFalling = false;
+			  gameChar_y = platforms[i].pos_y;
+			  break;
 		  	}
 		}
 
@@ -231,9 +232,10 @@ function keyPressed() {
 	}
 
 	if (!isFalling) { 
+		console.log("flying");
 		if (keyCode == 32) {
 			console.log("flying");
-			gameChar_y -= 100;
+			gameChar_y -= 130;
 			jumpSound.play();
 		}
 	}
