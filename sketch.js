@@ -37,6 +37,7 @@ var contactWithEnemy;
 var goal;
 
 var platforms;
+var enemies;
 
 // ---------------------
 // preload sound effect
@@ -125,6 +126,37 @@ function draw() {
 	
 	// Draw flag
 	renderFlagpole();
+
+	// draw enemies
+	for (var i = 0; i < enemies.length; i++)
+	{
+		enemies[i].draw();
+
+		var isContact = enemies[i].checkContact(gameChar_world_x, gameChar_y);
+
+		if (isContact)
+		{
+			if (lives > 0)
+			{
+				lives -= 1
+				startGame();
+				break;
+			} 
+			else
+			{
+				text("Game over. Press space to continue.", width / 4, height / 2);
+				keyPressed()
+				{
+					if (keyCode == 32) {
+						console.log('test')
+						lives = 3;
+						startGame();
+					}
+				}
+				return;
+			}
+		}
+	}
 	
 	// End scrolling
 	pop();
@@ -157,7 +189,7 @@ function draw() {
 	
 	if (flagpole.isReached)
 	{
-        goalSound.play();
+        // goalSound.play();
 		textSize(32);
 		text("Level complete!!. Press space to continue.", width / 4, height / 2);
 		return;
@@ -716,6 +748,51 @@ function checkContact(gc_x, gc_y, t_platform) {
 	return false;
 }
 
+// function to draw enemy
+function Enemy(x, y, range)
+{
+	this.x = x;
+	this.y = y;
+	this.range = range;
+
+	this.currentX = x;
+	this.inc = 1;
+
+	this.update = function()
+	{
+		this.currentX += this.inc;
+
+		if (this.currentX >= this.x + this.range)
+		{
+			this.inc = - 1;
+		}
+		else if (this.currentX < this.x)
+		{
+			this.inc = 1;
+		}
+	}
+
+
+	this.draw = function()
+	{
+		this.update();
+		fill(255, 0, 0);
+		ellipse(this.currentX, this.y, 30);
+	}
+
+	this.checkContact = function(gc_x, gc_y)
+	{
+		var d = dist(gc_x, gc_y, this.currentX, this.y)
+		
+		if(d < 20)
+		{
+			return true;
+		}
+
+		return false;
+	}
+}
+
 function startGame()
 {
 	gameChar_x = width / 2;
@@ -796,5 +873,8 @@ function startGame()
 		{ pos_x: 300, pos_y: floorPos_y - 50,  width: 100, height: 20},
 		{ pos_x: 350, pos_y: floorPos_y - 100, width: 50, height: 20},
 		{ pos_x: 400, pos_y: floorPos_y - 150, width: 50, height: 20},
-	]
+	];
+
+	enemies = [];
+	enemies.push(new Enemy(100, floorPos_y - 15, 100));
 }
