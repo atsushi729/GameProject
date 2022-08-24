@@ -177,6 +177,7 @@ function draw() {
 		rect(0, 0, width, height);
 
 		// Draw game over text
+		textStyle(ITALIC);
 		fill(25, 25, 112);
 		textSize(60);
 		text("Game over!", width / 4 + 140, height / 2);
@@ -197,6 +198,7 @@ function draw() {
 		rect(0, 0, width, height);
 
 		// Draw goal text
+		textStyle(ITALIC);
 		fill(255, 255, 0);
 		textSize(40);
 		text(" Level complete!! You get " + game_score + " points", width / 4 - 50, height / 2);
@@ -597,8 +599,8 @@ function drawMountains() {
 		triangle(mountain.pos_x - 90, mountain.pos_y + 200, mountain.pos_x - 20, mountain.pos_y + 60, mountain.pos_x + 50, mountain.pos_y + 100);
 		triangle(mountain.pos_x + 50, mountain.pos_y + 100, mountain.pos_x + 10, mountain.pos_y + 40, mountain.pos_x - 10, mountain.pos_y + 100);
 		stroke(0);
-		strokeWeight(1);
-		line(mountain.pos_x - 80, mountain.pos_y + 200, mountain.pos_x - 20, mountain.pos_y + 100);
+		// strokeWeight(1);
+		// line(mountain.pos_x - 80, mountain.pos_y + 200, mountain.pos_x - 20, mountain.pos_y + 100);
 
 		// illustrate snow 
 		stroke(255);
@@ -613,7 +615,8 @@ function drawMountains() {
 		stroke(0);
 
 		// Draw mountain's shadow
-
+		fill(0, 80);
+		triangle(mountain.pos_x, mountain.pos_y, mountain.pos_x - 150, mountain.pos_y + 232, mountain.pos_x - 50, mountain.pos_y + 232);
 	}
 }
 
@@ -624,16 +627,28 @@ function drawTrees() {
 		fill(139, 69, 19);
 		rect(tree_x + 30, trees_y + 40, 30, 52);
 		
+		// Draw trunk shadow
 		fill(0, 80);
 		rect(tree_x + 30, trees_y + 40, 5, 52);
 		rect(tree_x + 34, trees_y + 40, 26, 3);
 
-
-
+		// Draw leaf
 		fill(0, 100, 0);
 		triangle(tree_x, trees_y + 40, tree_x + 90, trees_y + 40, tree_x + 45, trees_y - 10);
 		fill(34, 139, 34);
 		triangle(tree_x + 10, trees_y, tree_x + 80, trees_y, tree_x + 45, trees_y - 50);
+
+		//Draw leaf shadow
+		fill(0, 80);
+		triangle(tree_x, trees_y + 40, tree_x + 90, trees_y + 40, tree_x + 45, trees_y - 10);
+		fill(0, 80);
+		triangle(tree_x + 10, trees_y, tree_x + 80, trees_y, tree_x + 45, trees_y - 50);
+
+		// Draw leaf(Overwrite)
+		fill(0, 100, 0);
+		triangle(tree_x + 10, trees_y + 35, tree_x + 85, trees_y + 35, tree_x + 50, trees_y - 10);
+		fill(34, 139, 34);
+		triangle(tree_x + 20, trees_y - 5, tree_x + 80, trees_y - 5, tree_x + 45, trees_y - 50);
 	}
 }
 
@@ -769,9 +784,12 @@ function drawPlatform(t_platform)
 {
 	// Main platform
 	noStroke();
-	fill(255, 255, 0);
+	fill(130, 69, 39);
 	rect(t_platform.pos_x, t_platform.pos_y, t_platform.width, t_platform.height, 3);
-
+	fill(0, 80);
+	rect(t_platform.pos_x + t_platform.width * 0.2, t_platform.pos_y + 5, 10, 10);
+	rect(t_platform.pos_x + t_platform.width * 0.6, t_platform.pos_y + 5, 10, 10);
+	
 	// Platform shadow
 	fill(0, 0, 0, 50);
 	rect(t_platform.pos_x, t_platform.pos_y, 5, t_platform.height, 1);
@@ -947,9 +965,9 @@ function startGame()
  * 
  * todo
  *  - update game charator              |
- *  - refactor the code to constractor  |
+ *  - refactor the code to constractor  | 
  *  - resarch how to restart            | done
- *  - add shadow tree                   |
- *  - add shadow mountain               |
- *  - update background                 | 
+ *  - add shadow tree                   | done
+ *  - add shadow mountain               | done
+ *  - update background (add effect)    | 
  */
