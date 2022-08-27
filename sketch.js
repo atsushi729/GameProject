@@ -124,7 +124,7 @@ function draw() {
 
 	// draw platform
 	for (var i = 0; i < platforms.length; i++) {
-		drawPlatform(platforms[i]);
+		platforms[i].draw();
 	}
 	
 	// Draw flag
@@ -213,20 +213,24 @@ function draw() {
 
 	// Logic to make the game character move or the background scroll.
 	if (isLeft) {
-		if (gameChar_x > width * 0.2) {
+		if (gameChar_x > width * 0.2)
+		{
 			gameChar_x -= 5;
 		}
-		else {
+		else
+		{
 			scrollPos += 5;
 			cloudScrollPos += 2;
 		}
 	}
 
 	if (isRight) {
-		if (gameChar_x < width * 0.8) {
+		if (gameChar_x < width * 0.8)
+		{
 			gameChar_x += 5;
 		}
-		else {
+		else
+		{
 			scrollPos -= 5; // negative for moving against the background
 			cloudScrollPos -= 2;
 		}
@@ -238,15 +242,17 @@ function draw() {
 
 		var isContact = false;
 		for (var i = 0; i < platforms.length; i++) {
-			if (checkContact(gameChar_world_x, gameChar_y, platforms[i])) {
+			if (platforms[i].checkContact(gameChar_world_x, gameChar_y))
+			{
 			  isContact = true;
 			  isFalling = false;
-			  gameChar_y = platforms[i].pos_y;
+			  gameChar_y = platforms[i].y;
 			  break;
 		  	}
 		}
 
-		if(!isContact){
+		if(!isContact)
+		{
 			isFalling = true;
 			gameChar_y += 3;
 		} 
@@ -271,35 +277,42 @@ function draw() {
 // Key control functions
 // ---------------------
 function keyPressed() {
-	if (keyCode == 37) {
+	if (keyCode == 37)
+	{
 		console.log("left arrow");
 		isLeft = true;
 	}
 
-	if (keyCode == 39) {
+	if (keyCode == 39)
+	{
 		console.log("right arrow");
 		isRight = true;
 	}
 
-	if (!isFalling) { 
-		if (keyCode == 32) {
+	if (!isFalling)
+	{ 
+		if (keyCode == 32)
+		{
 			console.log("flying");
 			gameChar_y -= 130;
 			jumpSound.play();
 		}
 	}
 
-	if (keyCode == 32 && isGameOver || isGoal) {
+	if (keyCode == 32 && isGameOver || isGoal)
+	{
 		setup();
 	}
 }
 
 function keyReleased() {
-	if (keyCode == 37) {
+	if (keyCode == 37)
+	{
 		console.log("left arrow");
 		isLeft = false;
 	}
-	else if (keyCode == 39) {
+	else if (keyCode == 39)
+	{
 		console.log("right arrow");
 		isRight = false;
 	}
@@ -310,7 +323,8 @@ function keyReleased() {
 // ------------------------------
 // Function to draw the game character.
 function drawGameChar() {
-	if (isLeft && isFalling) {
+	if (isLeft && isFalling)
+	{
         // jumping-left
 		//general 
 		strokeWeight(1);
@@ -359,7 +373,8 @@ function drawGameChar() {
 		// set default
 		strokeWeight(1);
 	}
-	else if (isRight && isFalling) { // jumping-right
+	else if (isRight && isFalling)
+	{   // jumping-right
 		//general 
 		strokeWeight(1);
 		stroke(color(0, 0, 0));
@@ -407,7 +422,8 @@ function drawGameChar() {
 		// set default
 		strokeWeight(1);
 	}
-	else if (isLeft) { // walking left
+	else if (isLeft)
+	{   // walking left
 		//general 
 		strokeWeight(1);
 		stroke(color(0, 0, 0));
@@ -446,7 +462,8 @@ function drawGameChar() {
 		// set default
 		strokeWeight(1);
 	}
-	else if (isRight) {	// walking right
+	else if (isRight)
+	{	// walking right
 		//general 
 		strokeWeight(1);
 		stroke(color(0, 0, 0));
@@ -485,7 +502,8 @@ function drawGameChar() {
 		// set default
 		strokeWeight(1);
 	}
-	else if (isFalling || isPlummeting) {	// jumping facing forwards
+	else if (isFalling || isPlummeting)
+	{	// jumping facing forwards
 		//general 
 		strokeWeight(1);
 		stroke(color(0, 0, 0));
@@ -526,7 +544,8 @@ function drawGameChar() {
 		// set default
 		strokeWeight(1);
 	}
-	else { // standing front facing
+	else
+	{ // standing front facing
 		//general 
 		strokeWeight(1);
 		stroke(color(0, 0, 0));
@@ -573,7 +592,8 @@ function drawGameChar() {
 // ---------------------------
 // Function to draw cloud objects.
 function drawClouds() {
-	for (var cloud of clouds) {
+	for (var cloud of clouds)
+	{
 		// Draw clouds shadow
 		fill(105, 105, 105, 120);
 		ellipse(cloud.pos_x - 65, cloud.pos_y + 15, 100,  70);
@@ -590,7 +610,8 @@ function drawClouds() {
 
 // Function to draw mountains objects
 function drawMountains() {
-	for (var mountain of mountains) {
+	for (var mountain of mountains)
+	{
 		fill(100, 100, 100);
 		triangle(mountain.pos_x, mountain.pos_y, mountain.pos_x - 150, mountain.pos_y + 232, mountain.pos_x + 150, mountain.pos_y + 232);
 		fill(255, 255, 255);
@@ -599,8 +620,6 @@ function drawMountains() {
 		triangle(mountain.pos_x - 90, mountain.pos_y + 200, mountain.pos_x - 20, mountain.pos_y + 60, mountain.pos_x + 50, mountain.pos_y + 100);
 		triangle(mountain.pos_x + 50, mountain.pos_y + 100, mountain.pos_x + 10, mountain.pos_y + 40, mountain.pos_x - 10, mountain.pos_y + 100);
 		stroke(0);
-		// strokeWeight(1);
-		// line(mountain.pos_x - 80, mountain.pos_y + 200, mountain.pos_x - 20, mountain.pos_y + 100);
 
 		// illustrate snow 
 		stroke(255);
@@ -622,7 +641,8 @@ function drawMountains() {
 
 // Function to draw trees objects
 function drawTrees() {
-	for (var tree_x of trees_x) {
+	for (var tree_x of trees_x)
+	{
 		// Draw trunk
 		fill(139, 69, 19);
 		rect(tree_x + 30, trees_y + 40, 30, 52);
@@ -657,7 +677,8 @@ function drawTrees() {
 // Canyon render and check functions
 // ---------------------------------
 // Function to draw canyon objects.
-function drawCanyon(t_canyon) {
+function drawCanyon(t_canyon)
+{
 	fill(160, 82, 45);
 	rect(t_canyon.pos_x, t_canyon.pos_y, 100, 200);
 	fill(100, 155, 255);
@@ -678,7 +699,8 @@ function drawCanyon(t_canyon) {
 }
 
 // Function to check character is over a canyon.
-function checkCanyon(t_canyon) {
+function checkCanyon(t_canyon)
+{
 	if (t_canyon.pos_x < gameChar_world_x && gameChar_world_x < t_canyon.pos_x + 80 && gameChar_y >= t_canyon.pos_y)
 	{
 		isPlummeting = true;
@@ -712,6 +734,7 @@ function renderFlagpole()
 	{
 		triangle(flagpole.pos_x, floorPos_y - 40, flagpole.pos_x + 50, floorPos_y - 40, flagpole.pos_x, floorPos_y);
 	}
+
 	pop();
 }
 
@@ -730,7 +753,8 @@ function checkFlagpole()
 // Collectable items render and check functions
 // ----------------------------------
 // Function to draw collectable objects.
-function drawCollectable(t_collectable) {
+function drawCollectable(t_collectable)
+{
 	fill(0, 255, 0);
 	ellipse(t_collectable.pos_x, t_collectable.pos_y, t_collectable.size + 20, t_collectable.size + 20);
 	fill(0, 0, 255);
@@ -746,8 +770,10 @@ function drawCollectable(t_collectable) {
 }
 
 // Function to check character has collected an item.
-function checkCollectable(t_collectable) {
-	if (dist(gameChar_world_x, gameChar_y, t_collectable.pos_x, t_collectable.pos_y + 25) < 20) {
+function checkCollectable(t_collectable)
+{
+	if (dist(gameChar_world_x, gameChar_y, t_collectable.pos_x, t_collectable.pos_y + 25) < 20)
+	{
 		t_collectable.isFound = true;
 		game_score += 1;
         getItemSound.play();
@@ -780,34 +806,43 @@ function checkPlayerDie()
 }
 
 // Function to draw platforms
-function drawPlatform(t_platform)
+function Platform(x, y, width, height)
 {
-	// Main platform
-	noStroke();
-	fill(130, 69, 39);
-	rect(t_platform.pos_x, t_platform.pos_y, t_platform.width, t_platform.height, 3);
-	fill(0, 80);
-	rect(t_platform.pos_x + t_platform.width * 0.2, t_platform.pos_y + 5, 10, 10);
-	rect(t_platform.pos_x + t_platform.width * 0.6, t_platform.pos_y + 5, 10, 10);
-	
-	// Platform shadow
-	fill(0, 0, 0, 50);
-	rect(t_platform.pos_x, t_platform.pos_y, 5, t_platform.height, 1);
-	rect(t_platform.pos_x + t_platform.width - 5, t_platform.pos_y, 5, t_platform.height, 1);
-	rect(t_platform.pos_x + 5, t_platform.pos_y + t_platform.height - 5, t_platform.width - 10, 5, 1);
-	rect(t_platform.pos_x + 5, t_platform.pos_y, t_platform.width - 10, 5, 1);
-}
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
 
-// Function to check contact with platform
-function checkContact(gc_x, gc_y, t_platform) {
-	if (gc_x > t_platform.pos_x && gc_x < t_platform.pos_x + t_platform.width) {
-	  const d = t_platform.pos_y - gc_y;
-
-	  if (d < 5 && d >= 0) {
-		return true;
-	  }
+	this.draw = function()
+	{
+		// Main platform
+		noStroke();
+		fill(130, 69, 39);
+		rect(this.x, this.y, this.width, this.height, 3);
+		fill(0, 80);
+		rect(this.x + this.width * 0.2, this.y + 5, 10, 10);
+		rect(this.x + this.width * 0.6, this.y + 5, 10, 10);
+		
+		// Platform shadow
+		fill(0, 0, 0, 50);
+		rect(this.x, this.y, 5, this.height, 1);
+		rect(this.x + this.width - 5, this.y, 5, this.height, 1);
+		rect(this.x + 5, this.y + this.height - 5, this.width - 10, 5, 1);
+		rect(this.x + 5, this.y, this.width - 10, 5, 1);
 	}
 
+	// Function to check contact with platform
+	this.checkContact = function(gc_x, gc_y) 
+	{
+		if (gc_x > this.x && gc_x < this.x + this.width)
+		{
+			const d = this.y - gc_y;
+			if (d < 5 && d >= 0)
+			{
+				return true;
+			}
+		}
+	}
 	return false;
 }
 
@@ -850,7 +885,7 @@ function Enemy(x, y, range, color)
 
 	this.checkContact = function(gc_x, gc_y)
 	{
-		var d = dist(gc_x, gc_y, this.currentX, this.y)
+		var d = dist(gc_x, gc_y, this.currentX, this.y);
 		
 		if(d < 20)
 		{
@@ -942,15 +977,18 @@ function startGame()
 		{ pos_x: 90, pos_y: 40, size: 20 },
 	];
 
-	platforms = [
-		{ pos_x: 300, pos_y: floorPos_y - 50,  width: 100, height: 20},
-		{ pos_x: 350, pos_y: floorPos_y - 100, width: 50, height: 20},
-		{ pos_x: 400, pos_y: floorPos_y - 150, width: 90, height: 20},
-		{ pos_x: 580, pos_y: floorPos_y - 200, width: 90, height: 20},
-		{ pos_x: 830, pos_y: floorPos_y - 80,  width: 50, height: 20},
-		{ pos_x: 932, pos_y: floorPos_y - 100, width: 50, height: 20},
-		{ pos_x: 1030, pos_y: floorPos_y - 80, width: 50, height: 20},
-	];
+	// platforms = [
+	// 	{ pos_x: 300,  pos_y:  floorPos_y - 50,  width: 100, height: 20},
+	// 	{ pos_x: 350,  pos_y:  floorPos_y - 100, width: 50, height: 20},
+	// 	{ pos_x: 400,  pos_y:  floorPos_y - 150, width: 90, height: 20},
+	// 	{ pos_x: 580,  pos_y:  floorPos_y - 200, width: 90, height: 20},
+	// 	{ pos_x: 830,  pos_y:  floorPos_y - 80,  width: 50, height: 20},
+	// 	{ pos_x: 932,  pos_y:  floorPos_y - 100, width: 50, height: 20},
+	// 	{ pos_x: 1030, pos_y:  floorPos_y - 80,  width: 50, height: 20},
+	// ];
+
+	platforms = [];
+	platforms.push(new Platform(300, floorPos_y - 50, 100, 20));
 
 	enemies = [];
 	enemies.push(new Enemy(100,  floorPos_y - 15, 100, [255, 200, 100]));
@@ -964,7 +1002,7 @@ function startGame()
  * 
  * 
  * todo
- *  - update game charator              |
+ *  - update game charator              | 
  *  - refactor the code to constractor  | 
  *  - resarch how to restart            | done
  *  - add shadow tree                   | done
