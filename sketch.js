@@ -42,6 +42,9 @@ var enemies;
 var isGameOver;
 var isGoal;
 
+var emit;
+var emitContainer;
+
 // ---------------------
 // preload sound effect
 // ---------------------
@@ -89,6 +92,8 @@ function draw() {
 	noStroke();
 	fill(0, 155, 0);
 	rect(0, floorPos_y, width, height / 4); // draw some green ground
+	fill(139, 69, 19);
+	rect(0, floorPos_y + 20, width, height);
 	
 	// Implement scrolling for clouds
 	push();
@@ -129,6 +134,13 @@ function draw() {
 	
 	// Draw flag
 	renderFlagpole();
+
+	// Draw particle
+	for (var i = 0; i < emitContainer.length; i++)
+    {
+      noStroke();
+      emitContainer[i].updateParticles();
+    }
 
 	// draw enemies
 	for (var i = 0; i < enemies.length; i++)
@@ -682,7 +694,7 @@ function drawCanyon(t_canyon)
 	fill(160, 82, 45);
 	rect(t_canyon.pos_x, t_canyon.pos_y, 100, 200);
 	fill(100, 155, 255);
-	rect(t_canyon.pos_x + 10, t_canyon.pos_y, 80, 200);
+	rect(t_canyon.pos_x + 10, t_canyon.pos_y, t_canyon.width, 200);
 
 	// illustrate wind
 	stroke(255);
@@ -896,6 +908,96 @@ function Enemy(x, y, range, color)
 	}
 }
 
+function Particle(x, y, xSpeed, ySpeed, size, color)
+{
+  this.x = x;
+  this.y = y;
+  this.xSpeed = xSpeed;
+  this.ySpeed = ySpeed;
+  this.size = size;
+  this.color = color;
+  this.age = 0;
+  
+  this.drawParticle = function()
+  {
+    fill(this.color);
+    ellipse(this.x, this.y, this.size);
+  }
+  
+  this.updateParticle = function()
+  {
+    this.x += this.xSpeed;
+    this.y += this.ySpeed;
+    this.age++;
+  }
+}
+
+function Emitter(x, y, xSpeed, ySpeed, size, color)
+{
+  this.x = x;
+  this.y = y;
+  this.xSpeed = xSpeed;
+  this.ySpeed = ySpeed;
+  this.size = size;
+  this.color = color;
+  
+  this.startParticle = 0;
+  this.lifetime = 0;
+  
+  this.particles = [];
+  
+  this.addParticles = function()
+  {
+      var p = new Particle
+      (
+        random(this.x - 10, this.x + 10), 
+        random(this.y - 10, this.y + 10), 
+        random(this.xSpeed - 1, this.xSpeed + 1), 
+        random(this.ySpeed - random(1, 5), this.ySpeed + 1), 
+        random(this.size - 4, this.size + 4), 
+        this.color
+      );
+    
+    return p;
+  }
+  
+  this.startEmitter = function(startParticle, lifetime)
+  {
+    this.startParticle = startParticle;
+    this.lifetime = lifetime;
+    
+    // start emmitter with initial particles
+    for(var i =0; i < startParticle; i++)
+    {
+      this.particles.push(this.addParticles());
+    }
+  }
+  
+  this.updateParticles = function()
+  {
+    var deadParticles = 0
+    for (var i = this.particles.length - 1; i >= 0; i--)
+    {
+      this.particles[i].drawParticle();
+      this.particles[i].updateParticle();
+      if (this.particles[i].age > random(0, this.lifetime))
+      {
+        this.particles.splice(i, 1);
+        deadParticles++;
+      }
+    }
+    
+    if (deadParticles > 0)
+      {
+        for(var i = 0; i < deadParticles; i++)
+          {
+            this.particles.push(this.addParticles());
+          }
+      }
+  }
+  
+}
+
 
 // Initialise game Information
 function startGame()
@@ -943,14 +1045,16 @@ function startGame()
 		{ pos_x:  600, pos_y: 200 },
 		{ pos_x: 1000, pos_y: 200 },
 		{ pos_x: 1200, pos_y: 200 },
-		{ pos_x: 2000, pos_y: 200 },
+		{ pos_x: 2100, pos_y: 200 },
+		{ pos_x: 2200, pos_y: 200 },
 	];
 
 	//canyons
 	canyons = [
-		{ pos_x:  900, pos_y: floorPos_y },
-		{ pos_x: 1500, pos_y: floorPos_y },
-		{ pos_x: 1700, pos_y: floorPos_y },
+		{ pos_x:  -500, pos_y: floorPos_y, width: 80 },
+		{ pos_x:  900, pos_y: floorPos_y, width: 80 },
+		{ pos_x: 1500, pos_y: floorPos_y, width: 80 },
+		{ pos_x: 1700, pos_y: floorPos_y, width: 80 },
 	];
 
 	//collectable
@@ -958,8 +1062,8 @@ function startGame()
 		{ pos_x: -200, pos_y: floorPos_y - 20, size: 20, isFound: false },
 		{ pos_x:  390, pos_y: floorPos_y - 20, size: 20, isFound: false },
 		{ pos_x:  640, pos_y: floorPos_y - 220, size: 20, isFound: false },
-		{ pos_x:  820, pos_y: floorPos_y - 20, size: 20, isFound: false },
-		{ pos_x: 1020, pos_y: floorPos_y - 20, size: 20, isFound: false },
+		{ pos_x:  800, pos_y: floorPos_y - 20, size: 20, isFound: false },
+		{ pos_x:  955, pos_y: floorPos_y - 150, size: 20, isFound: false },
 		{ pos_x: 1220, pos_y: floorPos_y - 20, size: 20, isFound: false },
 		{ pos_x: 1820, pos_y: floorPos_y - 20, size: 20, isFound: false },
 	];
@@ -968,32 +1072,38 @@ function startGame()
 	
 	flagpole = {
 		isReached: false,
-		pos_x: 2000,
+		pos_x: 2500,
 	};
-		
+
 	hearts = [
 		{ pos_x: 30, pos_y: 40, size: 20 },
 		{ pos_x: 60, pos_y: 40, size: 20 },
 		{ pos_x: 90, pos_y: 40, size: 20 },
 	];
 
-	// platforms = [
-	// 	{ pos_x: 300,  pos_y:  floorPos_y - 50,  width: 100, height: 20},
-	// 	{ pos_x: 350,  pos_y:  floorPos_y - 100, width: 50, height: 20},
-	// 	{ pos_x: 400,  pos_y:  floorPos_y - 150, width: 90, height: 20},
-	// 	{ pos_x: 580,  pos_y:  floorPos_y - 200, width: 90, height: 20},
-	// 	{ pos_x: 830,  pos_y:  floorPos_y - 80,  width: 50, height: 20},
-	// 	{ pos_x: 932,  pos_y:  floorPos_y - 100, width: 50, height: 20},
-	// 	{ pos_x: 1030, pos_y:  floorPos_y - 80,  width: 50, height: 20},
-	// ];
-
 	platforms = [];
-	platforms.push(new Platform(300, floorPos_y - 50, 100, 20));
+	platforms.push(new Platform(250,  floorPos_y - 50,  100, 20));
+	platforms.push(new Platform(350,  floorPos_y - 100, 100, 20));
+	platforms.push(new Platform(400,  floorPos_y - 150, 100, 20));
+	platforms.push(new Platform(580,  floorPos_y - 200, 100, 20));
+	platforms.push(new Platform(800,  floorPos_y - 80,  50, 20));
+	platforms.push(new Platform(932,  floorPos_y - 130, 50, 20));
+	platforms.push(new Platform(1030, floorPos_y - 80,  100, 20));
+	platforms.push(new Platform(1330, floorPos_y - 80,  100, 20));
 
 	enemies = [];
 	enemies.push(new Enemy(100,  floorPos_y - 15, 100, [255, 200, 100]));
 	enemies.push(new Enemy(800,  floorPos_y - 15, 100, [100, 200, 10]));
 	enemies.push(new Enemy(1400, floorPos_y - 15, 100, [200, 200, 10]));
+
+	emitContainer = [];  
+	emitContainer.push(new Emitter(955,  height, 0, -1, 10, color(224, 255, 255, 80)));
+	emitContainer.push(new Emitter(1550, height, 0, -1, 10, color(224, 255, 255, 80)));
+	emitContainer.push(new Emitter(1750, height, 0, -1, 10, color(224, 255, 255, 80)));
+	for (var i = 0; i < emitContainer.length; i++)
+	{
+		emitContainer[i].startEmitter(500, 100);
+	}
 }
 
 
@@ -1008,4 +1118,5 @@ function startGame()
  *  - add shadow tree                   | done
  *  - add shadow mountain               | done
  *  - update background (add effect)    | 
+ *  - update object position            | 
  */
