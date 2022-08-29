@@ -18,8 +18,7 @@ var isRight;
 var isFalling;
 var isPlummeting;
 
-var trees_x;
-var trees_y;
+var trees;
 var clouds;
 var mountains;
 var canyons;
@@ -78,7 +77,6 @@ function preload()
 function setup()
 {
 	createCanvas(1024, 576);
-    
     floorPos_y = height * 3 / 4;
 	lives = 3;
 	startGame();
@@ -88,50 +86,65 @@ function setup()
 // Draw functions
 // ---------------------
 function draw() {
-	background(135, 206, 250); // fill the sky blue
+	// fill the sky blue
+	background(135, 206, 250); 
 	noStroke();
+
+	// draw some green ground
 	fill(0, 155, 0);
-	rect(0, floorPos_y, width, height / 4); // draw some green ground
+	rect(0, floorPos_y, width, height / 4); 
 	fill(139, 69, 19);
 	rect(0, floorPos_y + 20, width, height);
-	
-	// Implement scrolling for clouds
+
+	// Implement scrolling for clouds (clouds scrolling effect)
 	push();
-	translate(cloudScrollPos, 0); // clouds scrolling effect
-	
+	translate(cloudScrollPos, 0); 
+
 	// Draw clouds.
-	drawClouds();
+	for (var i = 0; i < clouds.length; i++)
+	{
+		clouds[i].draw();
+	}
 	pop();
 	
-	// Implement scrolling for other objects
+	// Implement scrolling for other objects (base scrolling effect)
 	push();
-	translate(scrollPos, 0); // base scrolling effect
+	translate(scrollPos, 0); 
 
 	// Draw mountains
-	drawMountains();
+	for (var i = 0; i < mountains.length; i++)
+	{
+		mountains[i].draw();
+	}
 
 	// Draw trees.
-	drawTrees();
+	for (var i = 0; i < trees.length; i++)
+	{
+		trees[i].draw();
+	}
 
 	// Draw canyons.
-	for (var i = 0; i < canyons.length; i++) {
-		drawCanyon(canyons[i]);
-		checkCanyon(canyons[i]);
+	for (var i = 0; i < canyons.length; i++)
+	{
+		canyons[i].draw();
+		canyons[i].checkCanyon();
 	}
 
 	// Draw collectable items.
 	for (var i = 0; i < collectables.length; i++) {
-		if (collectables[i].isFound == false) {
-			drawCollectable(collectables[i]);
-			checkCollectable(collectables[i]);
+		if (collectables[i].isFound == false)
+		{
+			collectables[i].draw();
+			collectables[i].checkCollectable();
 		}
 	}
 
 	// draw platform
-	for (var i = 0; i < platforms.length; i++) {
+	for (var i = 0; i < platforms.length; i++)
+	{
 		platforms[i].draw();
 	}
-	
+
 	// Draw flag
 	renderFlagpole();
 
@@ -159,7 +172,7 @@ function draw() {
 			} 
 		}
 	}
-	
+
 	// End scrolling
 	pop();
 	
@@ -171,16 +184,16 @@ function draw() {
 	
 	// Draw game character.
 	drawGameChar();
-	
+
 	// Draw lives
 	for (var i = 0; i < lives;i++)
 	{
-		drawLives(hearts[i]);
+		hearts[i].draw();
 	}
 	
 	// Check player's lives
 	checkPlayerDie();
-	
+
 	// Logic to express player has game over
 	if (lives < 1)
 	{
@@ -250,10 +263,11 @@ function draw() {
 
 	// Logic to make the game character rise and fall.
 	// add falling code
-	if (gameChar_y < floorPos_y) {
-
+	if (gameChar_y < floorPos_y)
+	{
 		var isContact = false;
-		for (var i = 0; i < platforms.length; i++) {
+		for (var i = 0; i < platforms.length; i++)
+		{
 			if (platforms[i].checkContact(gameChar_world_x, gameChar_y))
 			{
 			  isContact = true;
@@ -268,7 +282,9 @@ function draw() {
 			isFalling = true;
 			gameChar_y += 3;
 		} 
-	} else {
+	} 
+	else
+	{
 		isFalling = false;
 	}
 	
@@ -599,135 +615,148 @@ function drawGameChar() {
 	}
 }
 
-// ---------------------------
-// Background render functions
-// ---------------------------
-// Function to draw cloud objects.
-function drawClouds() {
-	for (var cloud of clouds)
-	{
-		// Draw clouds shadow
-		fill(105, 105, 105, 120);
-		ellipse(cloud.pos_x - 65, cloud.pos_y + 15, 100,  70);
-		ellipse(cloud.pos_x,      cloud.pos_y + 15, 130, 110);
-		ellipse(cloud.pos_x + 50, cloud.pos_y + 15, 100,  70);
-
-		//Draw main clouds
-		fill(255, 255, 255);
-		ellipse(cloud.pos_x - 60, cloud.pos_y + 10, 100, 70);
-		ellipse(cloud.pos_x,      cloud.pos_y + 10, 130, 110);
-		ellipse(cloud.pos_x + 60, cloud.pos_y + 10, 100, 70);
-	}
-}
-
-// Function to draw mountains objects
-function drawMountains() {
-	for (var mountain of mountains)
-	{
-		fill(100, 100, 100);
-		triangle(mountain.pos_x, mountain.pos_y, mountain.pos_x - 150, mountain.pos_y + 232, mountain.pos_x + 150, mountain.pos_y + 232);
-		fill(255, 255, 255);
-		triangle(mountain.pos_x - 52, mountain.pos_y + 80, mountain.pos_x, mountain.pos_y, mountain.pos_x + 52, mountain.pos_y + 80);
-		fill(100, 100, 100);
-		triangle(mountain.pos_x - 90, mountain.pos_y + 200, mountain.pos_x - 20, mountain.pos_y + 60, mountain.pos_x + 50, mountain.pos_y + 100);
-		triangle(mountain.pos_x + 50, mountain.pos_y + 100, mountain.pos_x + 10, mountain.pos_y + 40, mountain.pos_x - 10, mountain.pos_y + 100);
-		stroke(0);
-
-		// illustrate snow 
-		stroke(255);
-		strokeWeight(10);
-		point(mountain.pos_x - 20, mountain.pos_y + 80);
-		point(mountain.pos_x + 10, mountain.pos_y + 80);
-		point(mountain.pos_x - 30, mountain.pos_y + 70);
-		point(mountain.pos_x + 20, mountain.pos_y + 70);
-		point(mountain.pos_x + 13, mountain.pos_y + 90);
-		point(mountain.pos_x - 30, mountain.pos_y + 90);
-		strokeWeight(0);
-		stroke(0);
-
-		// Draw mountain's shadow
-		fill(0, 80);
-		triangle(mountain.pos_x, mountain.pos_y, mountain.pos_x - 150, mountain.pos_y + 232, mountain.pos_x - 50, mountain.pos_y + 232);
-	}
-}
-
-// Function to draw trees objects
-function drawTrees() {
-	for (var tree_x of trees_x)
+function Tree(x, y)
+{
+	this.x = x;
+	this.y = y;
+	
+	// Function to draw trees objects
+	this.draw = function()
 	{
 		// Draw trunk
 		fill(139, 69, 19);
-		rect(tree_x + 30, trees_y + 40, 30, 52);
+		rect(this.x + 30, this.y + 40, 30, 52);
 		
 		// Draw trunk shadow
 		fill(0, 80);
-		rect(tree_x + 30, trees_y + 40, 5, 52);
-		rect(tree_x + 34, trees_y + 40, 26, 3);
-
+		rect(this.x + 30, this.y + 40, 5, 52);
+		rect(this.x + 34, this.y + 40, 26, 3);
+		
 		// Draw leaf
 		fill(0, 100, 0);
-		triangle(tree_x, trees_y + 40, tree_x + 90, trees_y + 40, tree_x + 45, trees_y - 10);
+		triangle(this.x, this.y + 40, this.x + 90, this.y + 40, this.x + 45, this.y - 10);
 		fill(34, 139, 34);
-		triangle(tree_x + 10, trees_y, tree_x + 80, trees_y, tree_x + 45, trees_y - 50);
-
+		triangle(this.x + 10, this.y, this.x + 80, this.y, this.x + 45, this.y - 50);
+		
 		//Draw leaf shadow
 		fill(0, 80);
-		triangle(tree_x, trees_y + 40, tree_x + 90, trees_y + 40, tree_x + 45, trees_y - 10);
+		triangle(this.x, this.y + 40, this.x + 90, this.y + 40, this.x + 45, this.y - 10);
 		fill(0, 80);
-		triangle(tree_x + 10, trees_y, tree_x + 80, trees_y, tree_x + 45, trees_y - 50);
-
+		triangle(this.x + 10, this.y, this.x + 80, this.y, this.x + 45, this.y - 50);
+		
 		// Draw leaf(Overwrite)
 		fill(0, 100, 0);
-		triangle(tree_x + 10, trees_y + 35, tree_x + 85, trees_y + 35, tree_x + 50, trees_y - 10);
+		triangle(this.x + 10, this.y + 35, this.x + 85, this.y + 35, this.x + 50, this.y - 10);
 		fill(34, 139, 34);
-		triangle(tree_x + 20, trees_y - 5, tree_x + 80, trees_y - 5, tree_x + 45, trees_y - 50);
-	}
-}
-
-
-// ---------------------------------
-// Canyon render and check functions
-// ---------------------------------
-// Function to draw canyon objects.
-function drawCanyon(t_canyon)
-{
-	fill(160, 82, 45);
-	rect(t_canyon.pos_x, t_canyon.pos_y, 100, 200);
-	fill(100, 155, 255);
-	rect(t_canyon.pos_x + 10, t_canyon.pos_y, t_canyon.width, 200);
-
-	// illustrate wind
-	stroke(255);
-	beginShape();
-	strokeWeight(1);
-	vertex(t_canyon.pos_x + 30, t_canyon.pos_y + 10);
-	vertex(t_canyon.pos_x + 70, t_canyon.pos_y + 30);
-	vertex(t_canyon.pos_x + 30, t_canyon.pos_y + 50);
-	vertex(t_canyon.pos_x + 70, t_canyon.pos_y + 70);
-	vertex(t_canyon.pos_x + 30, t_canyon.pos_y + 90);
-	vertex(t_canyon.pos_x + 70, t_canyon.pos_y + 110);
-	endShape();
-	noStroke();
-}
-
-// Function to check character is over a canyon.
-function checkCanyon(t_canyon)
-{
-	if (t_canyon.pos_x < gameChar_world_x && gameChar_world_x < t_canyon.pos_x + 80 && gameChar_y >= t_canyon.pos_y)
-	{
-		isPlummeting = true;
+		triangle(this.x + 20, this.y - 5, this.x + 80, this.y - 5, this.x + 45, this.y - 50);
 	}
 	
-	if (isPlummeting)
+}
+
+function Cloud(x, y) 
+{
+	this.x = x;
+	this.y = y;
+
+	// Function to draw cloud objects.
+	this.draw = function()
 	{
-		gameChar_y += 2;
-        fallSound.play();
+		// Draw clouds shadow
+		fill(105, 105, 105, 120);
+		ellipse(this.x - 65, this.y + 15, 100,  70);
+		ellipse(this.x,      this.y + 15, 130, 110);
+		ellipse(this.x + 50, this.y + 15, 100,  70);
+
+		//Draw main clouds
+		fill(255, 255, 255);
+		ellipse(this.x - 60, this.y + 10, 100, 70);
+		ellipse(this.x,      this.y + 10, 130, 110);
+		ellipse(this.x + 60, this.y + 10, 100, 70);
 	}
 }
 
-// ----------------------------------
-// Flag render and check functions
-// ----------------------------------
+function Mountain(x, y)
+{
+	this.x = x;
+	this.y = y;
+
+	// Function to draw mountains objects
+	this.draw = function()
+	{
+		// Dran main mountain
+		fill(100, 100, 100);
+		triangle(this.x, this.y, this.x - 150, this.y + 232, this.x + 150, this.y + 232);
+		fill(255, 255, 255);
+		triangle(this.x - 52, this.y + 80, this.x, this.y, this.x + 52, this.y + 80);
+		fill(100, 100, 100);
+		triangle(this.x - 90, this.y + 200, this.x - 20, this.y + 60, this.x + 50, this.y + 100);
+		triangle(this.x + 50, this.y + 100, this.x + 10, this.y + 40, this.x - 10, this.y + 100);
+		stroke(0);
+	
+		// illustrate snow 
+		stroke(255);
+		strokeWeight(10);
+		point(this.x - 20, this.y + 80);
+		point(this.x + 10, this.y + 80);
+		point(this.x - 30, this.y + 70);
+		point(this.x + 20, this.y + 70);
+		point(this.x + 13, this.y + 90);
+		point(this.x - 30, this.y + 90);
+		strokeWeight(0);
+		stroke(0);
+	
+		// Draw mountain's shadow
+		fill(0, 80);
+		triangle(this.x, this.y, this.x - 150, this.y + 232, this.x - 50, this.y + 232);
+	}
+}
+
+function Canyon(x, y, width)
+{
+	this.x = x;
+	this.y = y;
+	this.width = width;
+
+	// Function to draw canyon objects.
+	this.draw = function()
+	{
+		// dran main canyon
+		fill(160, 82, 45);
+		rect(this.x, this.y, 100, 200);
+		fill(100, 155, 255);
+		rect(this.x + 10, this.y, this.width, 200);
+
+		// illustrate wind
+		stroke(255);
+		beginShape();
+		strokeWeight(1);
+		vertex(this.x + 30, this.y + 10);
+		vertex(this.x + 70, this.y + 30);
+		vertex(this.x + 30, this.y + 50);
+		vertex(this.x + 70, this.y + 70);
+		vertex(this.x + 30, this.y + 90);
+		vertex(this.x + 70, this.y + 110);
+		endShape();
+		noStroke();
+	}
+
+	// Function to check character is over a canyon.
+	this.checkCanyon = function()
+	{
+		if (this.x < gameChar_world_x && gameChar_world_x < this.x + 80 && gameChar_y >= this.y)
+		{
+			isPlummeting = true;
+		}
+		
+		if (isPlummeting)
+		{
+			gameChar_y += 2;
+			fallSound.play();
+		}
+	}
+}
+
+
 // Function to draw and render flags.
 function renderFlagpole()
 {
@@ -761,49 +790,59 @@ function checkFlagpole()
 	}
 }
 
-// ----------------------------------
-// Collectable items render and check functions
-// ----------------------------------
-// Function to draw collectable objects.
-function drawCollectable(t_collectable)
-{
-	fill(0, 255, 0);
-	ellipse(t_collectable.pos_x, t_collectable.pos_y, t_collectable.size + 20, t_collectable.size + 20);
-	fill(0, 0, 255);
-	ellipse(t_collectable.pos_x, t_collectable.pos_y, t_collectable.size, t_collectable.size);
-	fill(255, 0, 0);
-	ellipse(t_collectable.pos_x, t_collectable.pos_y, t_collectable.size - 10, t_collectable.size - 10);
-	fill(255, 255, 255);
-	triangle(
-		t_collectable.pos_x, t_collectable.pos_y - 10,
-		t_collectable.pos_x + 7, t_collectable.pos_y + 5,
-		t_collectable.pos_x - 7, t_collectable.pos_y + 5);
-	stroke(255);
-}
 
-// Function to check character has collected an item.
-function checkCollectable(t_collectable)
+function Collectable(x, y, size, isFound)
 {
-	if (dist(gameChar_world_x, gameChar_y, t_collectable.pos_x, t_collectable.pos_y + 25) < 20)
+	this.x = x;
+	this.y = y;
+	this.size = size;
+	this.isFound = isFound;
+
+	// Function to draw collectable.
+	this.draw = function()
 	{
-		t_collectable.isFound = true;
-		game_score += 1;
-        getItemSound.play();
+		fill(0, 255, 0);
+		ellipse(this.x, this.y, this.size + 20, this.size + 20);
+		fill(0, 0, 255);
+		ellipse(this.x, this.y, this.size, this.size);
+		fill(255, 0, 0);
+		ellipse(this.x, this.y, this.size - 10, this.size - 10);
+		fill(255, 255, 255);
+		triangle(
+			this.x, this.y - 10,
+			this.x + 7, this.y + 5,
+			this.x - 7, this.y + 5);
+		stroke(255);
+	}
+
+	// Function to check character has collected an item.	
+	this.checkCollectable = function()
+	{
+		if (dist(gameChar_world_x, gameChar_y, this.x, this.y + 25) < 20)
+		{
+			this.isFound = true;
+			game_score += 1;
+			getItemSound.play();
+		}
 	}
 }
 
-// ----------------------------------
-// Lives render and check functions
-// ----------------------------------
-// Function to draw lives.
-function drawLives(t_heart)
+function Live(x, y, size)
 {
-	fill(255, 0, 0);
-	beginShape();
-	vertex(t_heart.pos_x, t_heart.pos_y);
-	bezierVertex(t_heart.pos_x - t_heart.size / 2, t_heart.pos_y - t_heart.size / 2, t_heart.pos_x - t_heart.size, t_heart.pos_y + t_heart.size / 3, t_heart.pos_x, t_heart.pos_y + t_heart.size);
-	bezierVertex(t_heart.pos_x + t_heart.size, t_heart.pos_y + t_heart.size / 3, t_heart.pos_x + t_heart.size / 2, t_heart.pos_y - t_heart.size / 2, t_heart.pos_x, t_heart.pos_y);
-	endShape(CLOSE);
+	this.x = x;
+	this.y = y;
+	this.size = size;
+
+	// Function to draw lives.
+	this.draw = function()
+	{
+		fill(255, 0, 0);
+		beginShape();
+		vertex(this.x, this.y);
+		bezierVertex(this.x - this.size / 2, this.y - this.size / 2, this.x - this.size, this.y + this.size / 3, this.x, this.y + this.size);
+		bezierVertex(this.x + this.size, this.y + this.size / 3, this.x + this.size / 2, this.y - this.size / 2, this.x, this.y);
+		endShape(CLOSE);
+	}
 }
 
 // Function to check character's lives.
@@ -817,7 +856,6 @@ function checkPlayerDie()
 	}
 }
 
-// Function to draw platforms
 function Platform(x, y, width, height)
 {
 	this.x = x;
@@ -825,6 +863,7 @@ function Platform(x, y, width, height)
 	this.width = width;
 	this.height = height;
 
+	// Function to draw platforms
 	this.draw = function()
 	{
 		// Main platform
@@ -858,7 +897,7 @@ function Platform(x, y, width, height)
 	return false;
 }
 
-// Function to draw enemy
+
 function Enemy(x, y, range, color)
 {
 	this.x = x;
@@ -895,6 +934,7 @@ function Enemy(x, y, range, color)
 		ellipse(this.currentX + 5, this.y, 5);
 	}
 
+	// Function to cheeck to contact with enemy
 	this.checkContact = function(gc_x, gc_y)
 	{
 		var d = dist(gc_x, gc_y, this.currentX, this.y);
@@ -918,12 +958,14 @@ function Particle(x, y, xSpeed, ySpeed, size, color)
   this.color = color;
   this.age = 0;
   
+  // Function to draw particle
   this.drawParticle = function()
   {
     fill(this.color);
     ellipse(this.x, this.y, this.size);
   }
   
+  // Function to update particle
   this.updateParticle = function()
   {
     this.x += this.xSpeed;
@@ -946,6 +988,7 @@ function Emitter(x, y, xSpeed, ySpeed, size, color)
   
   this.particles = [];
   
+  // Function to set particle
   this.addParticles = function()
   {
       var p = new Particle
@@ -961,6 +1004,7 @@ function Emitter(x, y, xSpeed, ySpeed, size, color)
     return p;
   }
   
+  // Function to initialze partile
   this.startEmitter = function(startParticle, lifetime)
   {
     this.startParticle = startParticle;
@@ -973,6 +1017,7 @@ function Emitter(x, y, xSpeed, ySpeed, size, color)
     }
   }
   
+  // Function to update particle
   this.updateParticles = function()
   {
     var deadParticles = 0
@@ -1008,6 +1053,7 @@ function startGame()
 	// Variable to control the background scrolling.
 	scrollPos = 0;
 	cloudScrollPos = 0;
+	game_score = 0;
 
 	// Variable to store the real position of the gameChar in the game
 	// world. Needed for collision detection.
@@ -1024,77 +1070,78 @@ function startGame()
 	// ---------------------
 	// Initialise arrays of scenery objects.
 	// ---------------------
-	// trees
-	trees_x = [-400, -200, 100, 300, 600, 700, 750, 1100, 1800];
-	trees_y = height / 2 + 52;
-
-	//clouds
-	clouds = [
-		{ pos_x: -100, pos_y: 150 },
-		{ pos_x:  200, pos_y: 200 },
-		{ pos_x:  600, pos_y: 100 },
-		{ pos_x:  800, pos_y: 200 },
-		{ pos_x: 1200, pos_y:  90 },
-		{ pos_x: 1400, pos_y: 200 },
-		{ pos_x: 1800, pos_y: 100 },
-	];
-
-	// mountain
-	mountains = [
-		{ pos_x: -200, pos_y: 200 },
-		{ pos_x:  600, pos_y: 200 },
-		{ pos_x: 1000, pos_y: 200 },
-		{ pos_x: 1200, pos_y: 200 },
-		{ pos_x: 2100, pos_y: 200 },
-		{ pos_x: 2200, pos_y: 200 },
-	];
-
-	//canyons
-	canyons = [
-		{ pos_x:  -500, pos_y: floorPos_y, width: 80 },
-		{ pos_x:  900, pos_y: floorPos_y, width: 80 },
-		{ pos_x: 1500, pos_y: floorPos_y, width: 80 },
-		{ pos_x: 1700, pos_y: floorPos_y, width: 80 },
-	];
-
-	//collectable
-	collectables = [
-		{ pos_x: -200, pos_y: floorPos_y - 20, size: 20, isFound: false },
-		{ pos_x:  390, pos_y: floorPos_y - 20, size: 20, isFound: false },
-		{ pos_x:  640, pos_y: floorPos_y - 220, size: 20, isFound: false },
-		{ pos_x:  800, pos_y: floorPos_y - 20, size: 20, isFound: false },
-		{ pos_x:  955, pos_y: floorPos_y - 150, size: 20, isFound: false },
-		{ pos_x: 1220, pos_y: floorPos_y - 20, size: 20, isFound: false },
-		{ pos_x: 1820, pos_y: floorPos_y - 20, size: 20, isFound: false },
-	];
-	
-	game_score = 0;
-	
 	flagpole = {
 		isReached: false,
 		pos_x: 2500,
 	};
 
-	hearts = [
-		{ pos_x: 30, pos_y: 40, size: 20 },
-		{ pos_x: 60, pos_y: 40, size: 20 },
-		{ pos_x: 90, pos_y: 40, size: 20 },
-	];
+	// trees
+	trees = [];
+	trees.push(new Tree(-400, height / 2 + 52));
+	trees.push(new Tree(-200, height / 2 + 52));
+	trees.push(new Tree( 100, height / 2 + 52));
+	trees.push(new Tree( 300, height / 2 + 52));
+	trees.push(new Tree( 600, height / 2 + 52));
+	trees.push(new Tree( 700, height / 2 + 52));
+	trees.push(new Tree( 750, height / 2 + 52));
+	trees.push(new Tree(1100, height / 2 + 52));
+	trees.push(new Tree(1800, height / 2 + 52));
+
+	//clouds
+	clouds = [];
+	clouds.push(new Cloud(-100, 150));
+	clouds.push(new Cloud( 200, 200));
+	clouds.push(new Cloud( 600, 100));
+	clouds.push(new Cloud(1200, 200));
+	clouds.push(new Cloud(1400, 90));
+	clouds.push(new Cloud(1800, 200));
+	clouds.push(new Cloud(1900, 150));
+
+	// mountain
+	mountains = [];
+	mountains.push(new Mountain(-200, 200));
+	mountains.push(new Mountain( 600, 200));
+	mountains.push(new Mountain(1000, 200));
+	mountains.push(new Mountain(1200, 200));
+	mountains.push(new Mountain(2100, 200));
+	mountains.push(new Mountain(2200, 200));
+
+	//canyons
+	canyons = [];
+	canyons.push(new Canyon(-500, floorPos_y, 80));
+	canyons.push(new Canyon( 900, floorPos_y, 80));
+	canyons.push(new Canyon(1500, floorPos_y, 80));
+	canyons.push(new Canyon(1700, floorPos_y, 80));
+
+	//collectable
+	collectables = [];
+	collectables.push(new Collectable(-200, floorPos_y - 20,  20, false));
+	collectables.push(new Collectable( 390, floorPos_y - 20,  20, false));
+	collectables.push(new Collectable( 640, floorPos_y - 220, 20, false));
+	collectables.push(new Collectable( 800, floorPos_y - 20,  20, false));
+	collectables.push(new Collectable( 955, floorPos_y - 150, 20, false));
+	collectables.push(new Collectable(1220, floorPos_y - 20,  20, false));
+	collectables.push(new Collectable(1820, floorPos_y - 20,  20, false));
+
+	hearts = [];
+	hearts.push(new Live(30, 40, 20));
+	hearts.push(new Live(60, 40, 20));
+	hearts.push(new Live(90, 40, 20));
 
 	platforms = [];
 	platforms.push(new Platform(250,  floorPos_y - 50,  100, 20));
 	platforms.push(new Platform(350,  floorPos_y - 100, 100, 20));
 	platforms.push(new Platform(400,  floorPos_y - 150, 100, 20));
 	platforms.push(new Platform(580,  floorPos_y - 200, 100, 20));
-	platforms.push(new Platform(800,  floorPos_y - 80,  50, 20));
-	platforms.push(new Platform(932,  floorPos_y - 130, 50, 20));
+	platforms.push(new Platform(800,  floorPos_y - 80,  50,  20));
+	platforms.push(new Platform(932,  floorPos_y - 130, 50,  20));
 	platforms.push(new Platform(1030, floorPos_y - 80,  100, 20));
 	platforms.push(new Platform(1330, floorPos_y - 80,  100, 20));
 
 	enemies = [];
 	enemies.push(new Enemy(100,  floorPos_y - 15, 100, [255, 200, 100]));
-	enemies.push(new Enemy(800,  floorPos_y - 15, 100, [100, 200, 10]));
-	enemies.push(new Enemy(1400, floorPos_y - 15, 100, [200, 200, 10]));
+	enemies.push(new Enemy(800,  floorPos_y - 15, 100, [100, 200,  10]));
+	enemies.push(new Enemy(1400, floorPos_y - 15, 100, [200, 200,  10]));
 
 	emitContainer = [];  
 	emitContainer.push(new Emitter(955,  height, 0, -1, 10, color(224, 255, 255, 80)));
@@ -1113,7 +1160,7 @@ function startGame()
  * 
  * todo
  *  - update game charator              | 
- *  - refactor the code to constractor  | 
+ *  - refactor the code to constractor  | done
  *  - resarch how to restart            | done
  *  - add shadow tree                   | done
  *  - add shadow mountain               | done
