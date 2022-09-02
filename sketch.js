@@ -144,24 +144,20 @@ function draw() {
 	{
 		platforms[i].draw();
 	}
-
-	// Draw flag
-	renderFlagpole();
-
+	
 	// Draw particle
 	for (var i = 0; i < emitContainer.length; i++)
     {
-      noStroke();
-      emitContainer[i].updateParticles();
+		noStroke();
+		emitContainer[i].updateParticles();
     }
-
+	
 	// draw enemies
 	for (var i = 0; i < enemies.length; i++)
 	{
 		enemies[i].draw();
-
 		var isContact = enemies[i].checkContact(gameChar_world_x, gameChar_y);
-
+		
 		if (isContact)
 		{
 			if (lives > 0)
@@ -172,6 +168,9 @@ function draw() {
 			} 
 		}
 	}
+
+	// Draw flag
+	renderFlagpole();
 
 	// End scrolling
 	pop();
@@ -226,7 +225,15 @@ function draw() {
 		textStyle(ITALIC);
 		fill(255, 255, 0);
 		textSize(40);
-		text(" Level complete!! You get " + game_score + " points", width / 4 - 50, height / 2);
+		if (game_score == collectables.length)
+		{
+			text(" Level complete!! You get full score!!", width / 4 - 50, height / 2);
+			text("Congratulations!!", width / 4 + 150, height / 2 + 50);
+		}
+		else 
+		{
+			text(" Level complete!! You get " + game_score + " points", width / 4 - 50, height / 2);
+		}
 
 		fill(255);
 		textSize(30);
@@ -237,7 +244,8 @@ function draw() {
 	}
 
 	// Logic to make the game character move or the background scroll.
-	if (isLeft) {
+	if (isLeft)
+	{
 		if (gameChar_x > width * 0.2)
 		{
 			gameChar_x -= 5;
@@ -249,7 +257,8 @@ function draw() {
 		}
 	}
 
-	if (isRight) {
+	if (isRight)
+	{
 		if (gameChar_x < width * 0.8)
 		{
 			gameChar_x += 5;
@@ -304,7 +313,8 @@ function draw() {
 // ---------------------
 // Key control functions
 // ---------------------
-function keyPressed() {
+function keyPressed()
+{
 	if (keyCode == 37)
 	{
 		console.log("left arrow");
@@ -333,7 +343,8 @@ function keyPressed() {
 	}
 }
 
-function keyReleased() {
+function keyReleased()
+{
 	if (keyCode == 37)
 	{
 		console.log("left arrow");
@@ -350,7 +361,8 @@ function keyReleased() {
 // Game character render function
 // ------------------------------
 // Function to draw the game character.
-function drawGameChar() {
+function drawGameChar()
+{
 	if (isLeft && isFalling)
 	{
         // jumping-left
@@ -587,7 +599,7 @@ function drawGameChar() {
 		//eyes
 		ellipse(gameChar_x + 5, gameChar_y - 52, 6, 6);
 		ellipse(gameChar_x - 5, gameChar_y - 52, 6, 6);
-		line(gameChar_x + 5, gameChar_y - 45, gameChar_x - 5, gameChar_y - 45)
+		line(gameChar_x + 5, gameChar_y - 45, gameChar_x - 5, gameChar_y - 45);
 
 		// body
 		fill(255, 255, 0);
@@ -650,7 +662,6 @@ function Tree(x, y)
 		fill(34, 139, 34);
 		triangle(this.x + 20, this.y - 5, this.x + 80, this.y - 5, this.x + 45, this.y - 50);
 	}
-	
 }
 
 function Cloud(x, y) 
@@ -664,13 +675,13 @@ function Cloud(x, y)
 		// Draw clouds shadow
 		fill(105, 105, 105, 120);
 		ellipse(this.x - 65, this.y + 15, 100,  70);
-		ellipse(this.x,      this.y + 15, 130, 110);
+		ellipse(this.x, this.y + 15, 130, 110);
 		ellipse(this.x + 50, this.y + 15, 100,  70);
 
 		//Draw main clouds
 		fill(255, 255, 255);
 		ellipse(this.x - 60, this.y + 10, 100, 70);
-		ellipse(this.x,      this.y + 10, 130, 110);
+		ellipse(this.x, this.y + 10, 130, 110);
 		ellipse(this.x + 60, this.y + 10, 100, 70);
 	}
 }
@@ -721,29 +732,17 @@ function Canyon(x, y, width)
 	this.draw = function()
 	{
 		// dran main canyon
-		fill(160, 82, 45);
-		rect(this.x, this.y, 100, 200);
+		fill(222, 184, 135, 180);
+		rect(this.x - 10, this.y, 10, 200);
+		rect(this.x + this.width, this.y, 10, 200);
 		fill(100, 155, 255);
-		rect(this.x + 10, this.y, this.width, 200);
-
-		// illustrate wind
-		stroke(255);
-		beginShape();
-		strokeWeight(1);
-		vertex(this.x + 30, this.y + 10);
-		vertex(this.x + 70, this.y + 30);
-		vertex(this.x + 30, this.y + 50);
-		vertex(this.x + 70, this.y + 70);
-		vertex(this.x + 30, this.y + 90);
-		vertex(this.x + 70, this.y + 110);
-		endShape();
-		noStroke();
+		rect(this.x, this.y, this.width, 200);
 	}
 
 	// Function to check character is over a canyon.
 	this.checkCanyon = function()
 	{
-		if (this.x < gameChar_world_x && gameChar_world_x < this.x + 80 && gameChar_y >= this.y)
+		if (this.x < gameChar_world_x && gameChar_world_x < this.x + this.width && gameChar_y >= this.y)
 		{
 			isPlummeting = true;
 		}
@@ -763,17 +762,17 @@ function renderFlagpole()
 	push();
 	strokeWeight(5);
 	stroke(180);
-	line(flagpole.pos_x, floorPos_y, flagpole.pos_x, floorPos_y - 250);
+	line(flagpole.pos_x, floorPos_y, flagpole.pos_x, floorPos_y - 300);
 	fill(255, 0, 255);
 	noStroke();
 	
 	if (flagpole.isReached)
 	{
-		triangle(flagpole.pos_x, floorPos_y - 250, flagpole.pos_x - 50, floorPos_y - 250, flagpole.pos_x, floorPos_y - 200);
+		triangle(flagpole.pos_x, floorPos_y - 300, flagpole.pos_x - 50, floorPos_y - 300, flagpole.pos_x, floorPos_y - 250);
 	} 
 	else
 	{
-		triangle(flagpole.pos_x, floorPos_y - 40, flagpole.pos_x + 50, floorPos_y - 40, flagpole.pos_x, floorPos_y);
+		triangle(flagpole.pos_x, floorPos_y - 50, flagpole.pos_x + 50, floorPos_y - 50, flagpole.pos_x, floorPos_y);
 	}
 
 	pop();
@@ -783,13 +782,12 @@ function renderFlagpole()
 function checkFlagpole()
 {
 	var d = abs(gameChar_world_x - flagpole.pos_x);
-	
+
 	if (d < 15)
 	{
 		flagpole.isReached = true;
 	}
 }
-
 
 function Collectable(x, y, size, isFound)
 {
@@ -856,39 +854,84 @@ function checkPlayerDie()
 	}
 }
 
-function Platform(x, y, width, height)
+function Platform(x, y, width, height, range, direction)
 {
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
+	this.range = range;
+	this.direction = direction;
+	this.inc = 1;
+
+	this.currentX = x;
+	this.currentY = y;
+
+	// Update platform position
+	this.horizontal = function()
+	{
+		this.currentX += this.inc;
+		if (this.currentX >= this.x + this.range)
+		{
+			this.inc = - 1;
+		}
+		else if (this.currentX < this.x)
+		{
+			this.inc = 1;
+		}
+	}
+	
+	// Update platform position
+	this.vertical = function()
+	{
+		this.currentY += this.inc;
+
+		if (this.currentY >= this.y + this.range)
+		{
+			this.inc = - 1;
+		}
+		else if (this.currentY < this.y)
+		{
+			this.inc = 1;
+		}
+	}
 
 	// Function to draw platforms
 	this.draw = function()
 	{
+		if (this.direction == "horizontal")
+		{
+			this.horizontal();
+		}
+		else if (this.direction == "vertical")
+		{
+			this.vertical();
+		}
+
 		// Main platform
 		noStroke();
 		fill(130, 69, 39);
-		rect(this.x, this.y, this.width, this.height, 3);
+		rect(this.currentX, this.currentY, this.width, this.height, 3);
 		fill(0, 80);
-		rect(this.x + this.width * 0.2, this.y + 5, 10, 10);
-		rect(this.x + this.width * 0.6, this.y + 5, 10, 10);
+		rect(this.currentX + this.width * 0.2, this.currentY + 5, 10, 10);
+		rect(this.currentX + this.width * 0.6, this.currentY + 5, 10, 10);
 		
 		// Platform shadow
 		fill(0, 0, 0, 50);
-		rect(this.x, this.y, 5, this.height, 1);
-		rect(this.x + this.width - 5, this.y, 5, this.height, 1);
-		rect(this.x + 5, this.y + this.height - 5, this.width - 10, 5, 1);
-		rect(this.x + 5, this.y, this.width - 10, 5, 1);
+		rect(this.currentX, this.currentY, 5, this.height, 1);
+		rect(this.currentX + this.width - 5, this.currentY, 5, this.height, 1);
+		rect(this.currentX + 5, this.currentY + this.height - 5, this.width - 10, 5, 1);
+		rect(this.currentX + 5, this.currentY, this.width - 10, 5, 1);
 	}
 
 	// Function to check contact with platform
 	this.checkContact = function(gc_x, gc_y) 
 	{
-		if (gc_x > this.x && gc_x < this.x + this.width)
+		if (gc_x > this.currentX && gc_x < this.currentX + this.width)
 		{
-			const d = this.y - gc_y;
-			if (d < 5 && d >= 0)
+			const d = this.currentY - gc_y;
+
+			if (d <8 && d >= -5)
 			{
 				return true;
 			}
@@ -897,14 +940,12 @@ function Platform(x, y, width, height)
 	return false;
 }
 
-
 function Enemy(x, y, range, color)
 {
 	this.x = x;
 	this.y = y;
 	this.range = range;
 	this.color = color;
-
 	this.currentX = x;
 	this.inc = 1;
 
@@ -985,7 +1026,6 @@ function Emitter(x, y, xSpeed, ySpeed, size, color)
   
   this.startParticle = 0;
   this.lifetime = 0;
-  
   this.particles = [];
   
   // Function to set particle
@@ -1020,11 +1060,13 @@ function Emitter(x, y, xSpeed, ySpeed, size, color)
   // Function to update particle
   this.updateParticles = function()
   {
-    var deadParticles = 0
+    var deadParticles = 0;
+
     for (var i = this.particles.length - 1; i >= 0; i--)
     {
       this.particles[i].drawParticle();
       this.particles[i].updateParticle();
+
       if (this.particles[i].age > random(0, this.lifetime))
       {
         this.particles.splice(i, 1);
@@ -1033,16 +1075,14 @@ function Emitter(x, y, xSpeed, ySpeed, size, color)
     }
     
     if (deadParticles > 0)
-      {
-        for(var i = 0; i < deadParticles; i++)
-          {
-            this.particles.push(this.addParticles());
-          }
-      }
+    {
+        for (var i = 0; i < deadParticles; i++)
+        {
+          this.particles.push(this.addParticles());
+        }
+    }
   }
-  
 }
-
 
 // Initialise game Information
 function startGame()
@@ -1108,20 +1148,32 @@ function startGame()
 
 	//canyons
 	canyons = [];
-	canyons.push(new Canyon(-500, floorPos_y, 80));
+	canyons.push(new Canyon(-600, floorPos_y, 200));
 	canyons.push(new Canyon( 900, floorPos_y, 80));
-	canyons.push(new Canyon(1500, floorPos_y, 80));
-	canyons.push(new Canyon(1700, floorPos_y, 80));
+	canyons.push(new Canyon(1500, floorPos_y, 200));
 
 	//collectable
 	collectables = [];
 	collectables.push(new Collectable(-200, floorPos_y - 20,  20, false));
+	collectables.push(new Collectable(   0, floorPos_y - 160,  20, false));
+	collectables.push(new Collectable( 100, floorPos_y - 160,  20, false));
 	collectables.push(new Collectable( 390, floorPos_y - 20,  20, false));
 	collectables.push(new Collectable( 640, floorPos_y - 220, 20, false));
 	collectables.push(new Collectable( 800, floorPos_y - 20,  20, false));
 	collectables.push(new Collectable( 955, floorPos_y - 150, 20, false));
 	collectables.push(new Collectable(1220, floorPos_y - 20,  20, false));
-	collectables.push(new Collectable(1820, floorPos_y - 20,  20, false));
+	collectables.push(new Collectable(1500, floorPos_y - 220,  20, false));
+	collectables.push(new Collectable(1550, floorPos_y - 220,  20, false));
+	collectables.push(new Collectable(1600, floorPos_y - 220,  20, false));
+	collectables.push(new Collectable(1650, floorPos_y - 220,  20, false));
+	collectables.push(new Collectable(1500, floorPos_y - 270,  20, false));
+	collectables.push(new Collectable(1550, floorPos_y - 270,  20, false));
+	collectables.push(new Collectable(1600, floorPos_y - 270,  20, false));
+	collectables.push(new Collectable(1650, floorPos_y - 270,  20, false));
+	collectables.push(new Collectable(1800, floorPos_y - 50,  20, false));
+	collectables.push(new Collectable(1900, floorPos_y - 110,  20, false));
+	collectables.push(new Collectable(2000, floorPos_y - 160,  20, false));
+	collectables.push(new Collectable(2230, floorPos_y - 220,  25, false));
 
 	hearts = [];
 	hearts.push(new Live(30, 40, 20));
@@ -1129,24 +1181,34 @@ function startGame()
 	hearts.push(new Live(90, 40, 20));
 
 	platforms = [];
-	platforms.push(new Platform(250,  floorPos_y - 50,  100, 20));
-	platforms.push(new Platform(350,  floorPos_y - 100, 100, 20));
-	platforms.push(new Platform(400,  floorPos_y - 150, 100, 20));
-	platforms.push(new Platform(580,  floorPos_y - 200, 100, 20));
-	platforms.push(new Platform(800,  floorPos_y - 80,  50,  20));
-	platforms.push(new Platform(932,  floorPos_y - 130, 50,  20));
-	platforms.push(new Platform(1030, floorPos_y - 80,  100, 20));
-	platforms.push(new Platform(1330, floorPos_y - 80,  100, 20));
+	platforms.push(new Platform(0,    floorPos_y - 50,   100, 20, 220, "horizontal"));
+	platforms.push(new Platform(0,    floorPos_y - 150,  50, 20, 20,  "vertical"));
+	platforms.push(new Platform(100,  floorPos_y - 100,  100, 20, 30,  "horizontal"));
+	platforms.push(new Platform(250,  floorPos_y - 50,   100, 20, 110, "horizontal"));
+	platforms.push(new Platform(350,  floorPos_y - 100,  100, 20, 100, "horizontal"));
+	platforms.push(new Platform(400,  floorPos_y - 150,  100, 20, 120, "horizontal"));
+	platforms.push(new Platform(580,  floorPos_y - 200,  100, 20, 20,  "vertical"));
+	platforms.push(new Platform(750,  floorPos_y - 80,   50,  20));
+	platforms.push(new Platform(900,  floorPos_y - 130,  50,  20, 100, "horizontal"));
+	platforms.push(new Platform(1030, floorPos_y - 80,   100, 20));
+	platforms.push(new Platform(1400, floorPos_y - 80,   100, 20, 80,  "horizontal"));
+	platforms.push(new Platform(1500, floorPos_y - 80,   100, 20, 200, "horizontal"));
+	platforms.push(new Platform(1500, floorPos_y - 130,  80,  20, 200, "horizontal"));
+	platforms.push(new Platform(1850, floorPos_y - 100,  80,  20));
+	platforms.push(new Platform(2000, floorPos_y - 170,  120, 20, 50, "horizontal"));
+	platforms.push(new Platform(2200, floorPos_y - 210,  80,  20));
 
 	enemies = [];
 	enemies.push(new Enemy(100,  floorPos_y - 15, 100, [255, 200, 100]));
-	enemies.push(new Enemy(800,  floorPos_y - 15, 100, [100, 200,  10]));
+	enemies.push(new Enemy(800,  floorPos_y - 15, 50, [100, 200,  10]));
 	enemies.push(new Enemy(1400, floorPos_y - 15, 100, [200, 200,  10]));
 
 	emitContainer = [];  
-	emitContainer.push(new Emitter(955,  height, 0, -1, 10, color(224, 255, 255, 80)));
-	emitContainer.push(new Emitter(1550, height, 0, -1, 10, color(224, 255, 255, 80)));
-	emitContainer.push(new Emitter(1750, height, 0, -1, 10, color(224, 255, 255, 80)));
+	emitContainer.push(new Emitter(-500,  height, 1, -1, random(10, 20), color(224, 255, 255, 80)));
+	emitContainer.push(new Emitter(-500,  height, -1, -1, random(10, 20), color(224, 255, 255, 80)));
+	emitContainer.push(new Emitter(945,  height, 0, -1, 10, color(224, 255, 255, 120)));
+	emitContainer.push(new Emitter(1600, height, 1, -1, random(10, 15), color(224, 255, 255, 120)));
+	emitContainer.push(new Emitter(1600, height, -1, -1, random(10, 15), color(224, 255, 255, 120)));
 	for (var i = 0; i < emitContainer.length; i++)
 	{
 		emitContainer[i].startEmitter(500, 100);
