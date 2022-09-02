@@ -275,6 +275,7 @@ function draw() {
 	if (gameChar_y < floorPos_y)
 	{
 		var isContact = false;
+
 		for (var i = 0; i < platforms.length; i++)
 		{
 			if (platforms[i].checkContact(gameChar_world_x, gameChar_y))
@@ -305,8 +306,6 @@ function draw() {
 
 	// Update real position of gameChar for collision detection.
 	gameChar_world_x = gameChar_x - scrollPos;
-
-	console.log(gameChar_world_x);
 }
 
 
@@ -871,6 +870,7 @@ function Platform(x, y, width, height, range, direction)
 	this.horizontal = function()
 	{
 		this.currentX += this.inc;
+
 		if (this.currentX >= this.x + this.range)
 		{
 			this.inc = - 1;
@@ -1095,8 +1095,7 @@ function startGame()
 	cloudScrollPos = 0;
 	game_score = 0;
 
-	// Variable to store the real position of the gameChar in the game
-	// world. Needed for collision detection.
+	// Variable to store the real position of the gameChar in the game world. Needed for collision detection.
 	gameChar_world_x = gameChar_x - scrollPos;
 
 	// Boolean variables to control the movement of the game character.
@@ -1133,7 +1132,7 @@ function startGame()
 	clouds.push(new Cloud( 200, 200));
 	clouds.push(new Cloud( 600, 100));
 	clouds.push(new Cloud(1200, 200));
-	clouds.push(new Cloud(1400, 90));
+	clouds.push(new Cloud(1400,  90));
 	clouds.push(new Cloud(1800, 200));
 	clouds.push(new Cloud(1900, 150));
 
@@ -1154,14 +1153,14 @@ function startGame()
 
 	//collectable
 	collectables = [];
-	collectables.push(new Collectable(-200, floorPos_y - 20,  20, false));
+	collectables.push(new Collectable(-200, floorPos_y -  20,  20, false));
 	collectables.push(new Collectable(   0, floorPos_y - 160,  20, false));
 	collectables.push(new Collectable( 100, floorPos_y - 160,  20, false));
-	collectables.push(new Collectable( 390, floorPos_y - 20,  20, false));
-	collectables.push(new Collectable( 640, floorPos_y - 220, 20, false));
-	collectables.push(new Collectable( 800, floorPos_y - 20,  20, false));
-	collectables.push(new Collectable( 955, floorPos_y - 150, 20, false));
-	collectables.push(new Collectable(1220, floorPos_y - 20,  20, false));
+	collectables.push(new Collectable( 390, floorPos_y -  20,  20, false));
+	collectables.push(new Collectable( 640, floorPos_y - 220,  20, false));
+	collectables.push(new Collectable( 800, floorPos_y -  20,  20, false));
+	collectables.push(new Collectable( 955, floorPos_y - 150,  20, false));
+	collectables.push(new Collectable(1220, floorPos_y -  20,  20, false));
 	collectables.push(new Collectable(1500, floorPos_y - 220,  20, false));
 	collectables.push(new Collectable(1550, floorPos_y - 220,  20, false));
 	collectables.push(new Collectable(1600, floorPos_y - 220,  20, false));
@@ -1170,7 +1169,7 @@ function startGame()
 	collectables.push(new Collectable(1550, floorPos_y - 270,  20, false));
 	collectables.push(new Collectable(1600, floorPos_y - 270,  20, false));
 	collectables.push(new Collectable(1650, floorPos_y - 270,  20, false));
-	collectables.push(new Collectable(1800, floorPos_y - 50,  20, false));
+	collectables.push(new Collectable(1800, floorPos_y -  50,  20, false));
 	collectables.push(new Collectable(1900, floorPos_y - 110,  20, false));
 	collectables.push(new Collectable(2000, floorPos_y - 160,  20, false));
 	collectables.push(new Collectable(2230, floorPos_y - 220,  25, false));
@@ -1181,34 +1180,34 @@ function startGame()
 	hearts.push(new Live(90, 40, 20));
 
 	platforms = [];
-	platforms.push(new Platform(0,    floorPos_y - 50,   100, 20, 220, "horizontal"));
-	platforms.push(new Platform(0,    floorPos_y - 150,  50, 20, 20,  "vertical"));
-	platforms.push(new Platform(100,  floorPos_y - 100,  100, 20, 30,  "horizontal"));
-	platforms.push(new Platform(250,  floorPos_y - 50,   100, 20, 110, "horizontal"));
-	platforms.push(new Platform(350,  floorPos_y - 100,  100, 20, 100, "horizontal"));
-	platforms.push(new Platform(400,  floorPos_y - 150,  100, 20, 120, "horizontal"));
-	platforms.push(new Platform(580,  floorPos_y - 200,  100, 20, 20,  "vertical"));
-	platforms.push(new Platform(750,  floorPos_y - 80,   50,  20));
-	platforms.push(new Platform(900,  floorPos_y - 130,  50,  20, 100, "horizontal"));
-	platforms.push(new Platform(1030, floorPos_y - 80,   100, 20));
-	platforms.push(new Platform(1400, floorPos_y - 80,   100, 20, 80,  "horizontal"));
-	platforms.push(new Platform(1500, floorPos_y - 80,   100, 20, 200, "horizontal"));
-	platforms.push(new Platform(1500, floorPos_y - 130,  80,  20, 200, "horizontal"));
-	platforms.push(new Platform(1850, floorPos_y - 100,  80,  20));
-	platforms.push(new Platform(2000, floorPos_y - 170,  120, 20, 50, "horizontal"));
-	platforms.push(new Platform(2200, floorPos_y - 210,  80,  20));
+	platforms.push(new Platform(   0,  floorPos_y -  50,  100, 20, 220, "horizontal"));
+	platforms.push(new Platform(   0,  floorPos_y - 150,   50, 20,  20, "vertical"));
+	platforms.push(new Platform( 100,  floorPos_y - 100,  100, 20,  30, "horizontal"));
+	platforms.push(new Platform( 250,  floorPos_y -  50,  100, 20, 110, "horizontal"));
+	platforms.push(new Platform( 350,  floorPos_y - 100,  100, 20, 100, "horizontal"));
+	platforms.push(new Platform( 400,  floorPos_y - 150,  100, 20, 120, "horizontal"));
+	platforms.push(new Platform( 580,  floorPos_y - 200,  100, 20,  20,  "vertical"));
+	platforms.push(new Platform( 750,  floorPos_y -  80,   50, 20));
+	platforms.push(new Platform( 900,  floorPos_y - 130,   50, 20, 100, "horizontal"));
+	platforms.push(new Platform(1030,  floorPos_y -  80,  100, 20));
+	platforms.push(new Platform(1400,  floorPos_y -  80,  100, 20, 80,  "horizontal"));
+	platforms.push(new Platform(1500,  floorPos_y -  80,  100, 20, 200, "horizontal"));
+	platforms.push(new Platform(1500,  floorPos_y - 130,   80, 20, 200, "horizontal"));
+	platforms.push(new Platform(1850,  floorPos_y - 100,   80, 20));
+	platforms.push(new Platform(2000,  floorPos_y - 170,  120, 20, 50,  "horizontal"));
+	platforms.push(new Platform(2200,  floorPos_y - 210,   80, 20));
 
 	enemies = [];
 	enemies.push(new Enemy(100,  floorPos_y - 15, 100, [255, 200, 100]));
-	enemies.push(new Enemy(800,  floorPos_y - 15, 50, [100, 200,  10]));
+	enemies.push(new Enemy(800,  floorPos_y - 15,  50, [100, 200,  10]));
 	enemies.push(new Enemy(1400, floorPos_y - 15, 100, [200, 200,  10]));
 
 	emitContainer = [];  
-	emitContainer.push(new Emitter(-500,  height, 1, -1, random(10, 20), color(224, 255, 255, 80)));
-	emitContainer.push(new Emitter(-500,  height, -1, -1, random(10, 20), color(224, 255, 255, 80)));
-	emitContainer.push(new Emitter(945,  height, 0, -1, 10, color(224, 255, 255, 120)));
-	emitContainer.push(new Emitter(1600, height, 1, -1, random(10, 15), color(224, 255, 255, 120)));
-	emitContainer.push(new Emitter(1600, height, -1, -1, random(10, 15), color(224, 255, 255, 120)));
+	emitContainer.push(new Emitter(-500,  height,  1, -1, random(10, 20), color(224, 255, 255,  80)));
+	emitContainer.push(new Emitter(-500,  height, -1, -1, random(10, 20), color(224, 255, 255,  80)));
+	emitContainer.push(new Emitter(945,  height,   0, -1, random(10, 20), color(224, 255, 255, 120)));
+	emitContainer.push(new Emitter(1600, height,   1, -1, random(10, 15), color(224, 255, 255, 120)));
+	emitContainer.push(new Emitter(1600, height,  -1, -1, random(10, 15), color(224, 255, 255, 120)));
 	for (var i = 0; i < emitContainer.length; i++)
 	{
 		emitContainer[i].startEmitter(500, 100);
