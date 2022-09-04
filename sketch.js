@@ -37,7 +37,7 @@ var emit;
 var emitContainer;
 
 // ---------------------
-// preload sound effect
+// preload functions
 // ---------------------
 function preload()
 {   
@@ -61,7 +61,7 @@ function preload()
 }
 
 // ---------------------
-// Draw functions
+// setup functions
 // ---------------------
 function setup()
 {
@@ -218,12 +218,12 @@ function draw() {
 		textSize(40);
 		if (game_score == collectables.length)
 		{
-			text(" Level complete!! You get full score!!", width / 4 - 50, height / 2);
+			text(" Level complete!! You got full score!!", width / 4 - 50, height / 2);
 			text("Congratulations!!", width / 4 + 150, height / 2 + 50);
 		}
 		else 
 		{
-			text(" Level complete!! You get " + game_score + " points", width / 4 - 50, height / 2);
+			text(" Level complete!! You got " + game_score + " points", width / 4 - 50, height / 2);
 		}
 
 		fill(255);
@@ -307,13 +307,11 @@ function keyPressed()
 {
 	if (keyCode == 37)
 	{
-		console.log("left arrow");
 		isLeft = true;
 	}
 
 	if (keyCode == 39)
 	{
-		console.log("right arrow");
 		isRight = true;
 	}
 
@@ -321,7 +319,6 @@ function keyPressed()
 	{ 
 		if (keyCode == 32)
 		{
-			console.log("flying");
 			gameChar_y -= 130;
 			jumpSound.play();
 		}
@@ -337,12 +334,10 @@ function keyReleased()
 {
 	if (keyCode == 37)
 	{
-		console.log("left arrow");
 		isLeft = false;
 	}
 	else if (keyCode == 39)
 	{
-		console.log("right arrow");
 		isRight = false;
 	}
 }
@@ -417,7 +412,7 @@ function drawGameChar()
 
 		//eyes
 		ellipse(gameChar_x + 8, gameChar_y - 52, 6, 6);
-		line(gameChar_x, gameChar_y - 45, gameChar_x + 9, gameChar_y - 45)
+		line(gameChar_x, gameChar_y - 45, gameChar_x + 9, gameChar_y - 45);
 
 		// body
 		fill(255, 255, 0);
@@ -547,7 +542,7 @@ function drawGameChar()
 		//eyes
 		ellipse(gameChar_x + 5, gameChar_y - 52, 6, 6);
 		ellipse(gameChar_x - 5, gameChar_y - 52, 6, 6);
-		line(gameChar_x + 5, gameChar_y - 45, gameChar_x - 5, gameChar_y - 45)
+		line(gameChar_x + 5, gameChar_y - 45, gameChar_x - 5, gameChar_y - 45);
 
 		// body
 		fill(255, 255, 0);
@@ -1097,9 +1092,7 @@ function startGame()
 	isGameOver = false;
 	isPlummeting = false;
 
-	// ---------------------
 	// Initialise arrays of scenery objects.
-	// ---------------------
 	flagpole = {
 		isReached: false,
 		pos_x: 2500,
@@ -1196,26 +1189,11 @@ function startGame()
 	emitContainer = [];  
 	emitContainer.push(new Emitter(-500,  height,  1, -1, random(10, 20), color(224, 255, 255,  80)));
 	emitContainer.push(new Emitter(-500,  height, -1, -1, random(10, 20), color(224, 255, 255,  80)));
-	emitContainer.push(new Emitter(945,  height,   0, -1, random(10, 20), color(224, 255, 255, 120)));
-	emitContainer.push(new Emitter(1600, height,   1, -1, random(10, 15), color(224, 255, 255, 120)));
-	emitContainer.push(new Emitter(1600, height,  -1, -1, random(10, 15), color(224, 255, 255, 120)));
+	emitContainer.push(new Emitter( 945,  height,  0, -1, random(10, 20), color(224, 255, 255, 120)));
+	emitContainer.push(new Emitter(1600,  height,  1, -1, random(10, 15), color(224, 255, 255, 120)));
+	emitContainer.push(new Emitter(1600,  height, -1, -1, random(10, 15), color(224, 255, 255, 120)));
 	for (var i = 0; i < emitContainer.length; i++)
 	{
 		emitContainer[i].startEmitter(500, 100);
 	}
 }
-
-
-
-/**
- * 
- * 
- * todo
- *  - update game charator              | 
- *  - refactor the code to constractor  | done
- *  - resarch how to restart            | done
- *  - add shadow tree                   | done
- *  - add shadow mountain               | done
- *  - update background (add effect)    | 
- *  - update object position            | 
- */
