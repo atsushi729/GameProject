@@ -1,11 +1,3 @@
-/*
-- Copy your game project code into this file
-- for the p5.Sound library look here https://p5js.org/reference/#/libraries/p5.sound
-- for finding cool sounds perhaps look here
-https://freesound.org/
-*/
-
-
 var gameChar_x;
 var gameChar_y;
 var floorPos_y;
@@ -60,15 +52,12 @@ function preload()
     fallSound = loadSound('assets/fall.wav');
     // contact with enemy sounds
     contactWithEnemySound = loadSound('assets/contact_with_enemy.wav');
-    // goal sounds
-    goalSound = loadSound('assets/goal.wav');
     
 	// set above sounds
     jumpSound.setVolume(0.1);
     getItemSound.setVolume(0.1);
     fallSound.setVolume(0.1);
     contactWithEnemySound.setVolume(0.1);
-    goalSound.setVolume(0.1);
 }
 
 // ---------------------
@@ -160,6 +149,8 @@ function draw() {
 		
 		if (isContact)
 		{
+			contactWithEnemySound.play();
+			
 			if (lives > 0)
 			{
 				lives -= 1;
