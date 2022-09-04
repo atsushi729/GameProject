@@ -1172,12 +1172,12 @@ function startGame()
 
 	platforms = [];
 	platforms.push(new Platform(   0,  floorPos_y -  50,  100, 20, 220, "horizontal"));
-	platforms.push(new Platform(   0,  floorPos_y - 150,   50, 20,  20, "vertical"));
+	platforms.push(new Platform(   0,  floorPos_y - 150,   50, 20,  10, "vertical"));
 	platforms.push(new Platform( 100,  floorPos_y - 100,  100, 20,  30, "horizontal"));
 	platforms.push(new Platform( 250,  floorPos_y -  50,  100, 20, 110, "horizontal"));
 	platforms.push(new Platform( 350,  floorPos_y - 100,  100, 20, 100, "horizontal"));
 	platforms.push(new Platform( 400,  floorPos_y - 150,  100, 20, 120, "horizontal"));
-	platforms.push(new Platform( 580,  floorPos_y - 200,  100, 20,  20,  "vertical"));
+	platforms.push(new Platform( 580,  floorPos_y - 200,  100, 20,  10,  "vertical"));
 	platforms.push(new Platform( 750,  floorPos_y -  80,   50, 20));
 	platforms.push(new Platform( 900,  floorPos_y - 130,   50, 20, 100, "horizontal"));
 	platforms.push(new Platform(1030,  floorPos_y -  80,  100, 20));
